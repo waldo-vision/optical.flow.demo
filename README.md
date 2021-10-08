@@ -1,5 +1,5 @@
 # waldo-anticheat
-A project that uses optical flow and machine learning to detect aimhacking in video clips from the game Apex Legends.
+A project that aims to use optical flow and machine learning to detect aimhacking in video clips from fps games
 
 ## The What
 A new form of cheating in video games is using deep learning to implement an aim assist cheat.
