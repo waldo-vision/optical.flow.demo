@@ -2,7 +2,7 @@
 A project that aims to use optical flow and machine learning to visually detect cheating or hacking in video clips from fps games.
 
 ## The What
-A new market for cheats that are visually indistinguishable to the human eye have lead to a rise in "closet hacking" among streamers and professionals.
+A new market for cheats that are visually indistinguishable to the human eye have led to a rise in "closet hacking" among streamers and professionals.
 This form of cheating is very hard to detect. In some cases, nearly impossible to detect due to the humanized aim assist coming from another system entirely. 
 
 We will combat this new kind of cheating by creating our own deep learning program to detect this behavior in video clips.
