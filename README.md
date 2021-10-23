@@ -1,5 +1,5 @@
 # waldo-anticheat
-A project that aims to use optical flow and machine learning to visually detect cheating or hacking in video clips from fps games.
+A project that aims to use optical flow and machine learning to visually detect cheating or hacking in video clips from fps games. An in depth video discussing WALDO https://youtu.be/GOI9EkLsUm0
 
 # Notes
 * This project is still under development. 
