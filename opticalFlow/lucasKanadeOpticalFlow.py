@@ -12,27 +12,32 @@ The idea is that perhaps the data about how certain pixels/features are moving a
 
 import cv2 as cv
 import numpy as np
+import os, sys
 
 # PARAMETERS------------------------------------------------------------------
 
+#Canny Threshholds
+th1 = 300
+th2 = 300
+
 # path to input videofile
-vidpath = r""
+vidpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bf_clip.mp4")
 
 # do you want to save the video?
-savevid = True
+savevid = False
 
 # do you want to preview the output?
 previewWindow = True
 
 # output video params
-fps = 20 # fps of output video, should match input video
+fps = 30 # fps of output video, should match input video
 
 # visualization parameters
-numPts = 5 # max number of points to track
-trailLength = 60 # how many frames to keep a fading trail behind a tracked point to show motion
+numPts = 3 # max number of points to track
+trailLength = 600 # how many frames to keep a fading trail behind a tracked point to show motion
 trailThickness = 8 # thickness of the trail to draw behind the target
-trailFade = 4 # the intensity at which the trail fades
-pointSize = 15 # pixel radius of the circle to draw over tracked points
+trailFade = 0 # the intensity at which the trail fades
+pointSize = 10 # pixel radius of the circle to draw over tracked points
 
 # params for Shi-Tomasi corner detection
 shitomasi_params = {
@@ -60,6 +65,7 @@ cap = cv.VideoCapture(vidpath)
 # get the first frame
 _, old_frame = cap.read()
 old_gray = cv.cvtColor(old_frame, cv.COLOR_BGR2GRAY)
+old_enhanced = cv.Canny(old_gray, th1, th2)
 
 # get resolution of video
 res_x = len(old_frame[0])
@@ -78,13 +84,13 @@ trail_history = [[[(0,0), (0,0)] for i in range(trailLength)] for i in range(num
 
 # get features from first frame
 print(f"\nRunning Optical Flow on: {vidpath}")
-old_points = cv.goodFeaturesToTrack(old_gray, maxCorners=numPts, mask=crosshairmask, **shitomasi_params)
+old_points = cv.goodFeaturesToTrack(old_enhanced, maxCorners=numPts, mask=crosshairmask, **shitomasi_params)
 
 # if saving video
 if savevid:
     # path to save output video
     pathparts = vidpath.split('.')
-    savepath = '.'+ vidpath.split('.')[-2] + '_LK_FLOW' + '.mp4'
+    savepath = vidpath.split('.')[-2] + '_LK_FLOW' + '.mp4'
     print(f"Saving Output video to: {savepath}")
 
     # get shape of video frames
@@ -105,9 +111,10 @@ while(True):
 
     # convert to grayscale
     new_frame_gray = cv.cvtColor(new_frame, cv.COLOR_BGR2GRAY)
+    new_frame_enhanced = cv.Canny(new_frame_gray, th1, th2)
 
     # calculate optical flow
-    new_points, st, err = cv.calcOpticalFlowPyrLK(old_gray, new_frame_gray, old_points, None, **LK_params)
+    new_points, st, err = cv.calcOpticalFlowPyrLK(old_enhanced, new_frame_enhanced, old_points, None, **LK_params)
 
     # select good points
     if old_points is not None:
@@ -145,14 +152,19 @@ while(True):
     
     # add trail to frame
     img = cv.add(new_frame, trailMask)
+    imgCanny = cv.add(new_frame_enhanced, trailMask)  
 
     # show the frames
     if previewWindow:
         cv.imshow('optical flow', img)
+        cv.imshow('Canny', imgCanny)
 
     # write frames to new output video
     if savevid:
         videoOut.write(img)
+    
+    #Save a jpg to see how the canny img looks like
+    #cv.imwrite(vidpath.split('.')[0] + 'test' + str(th1) + "-" + str(th2) + '.jpg', new_frame_enhanced)
 
     # kill window if ESC is pressed
     k = cv.waitKey(30) & 0xff
@@ -160,12 +172,12 @@ while(True):
         break
 
     # update previous frame and previous points
-    old_gray = new_frame_gray.copy()
+    old_enhanced = new_frame_enhanced.copy()
     old_points = good_new.reshape(-1,1,2)
 
     # if old_points < numPts, get new points
     if (numPts - len(old_points)) > 0:
-        old_points = cv.goodFeaturesToTrack(old_gray, maxCorners=numPts, mask=crosshairmask, **shitomasi_params)
+        old_points = cv.goodFeaturesToTrack(old_enhanced, maxCorners=numPts, mask=crosshairmask, **shitomasi_params)
 
 # after video is finished
 print('\nComplete!\n')

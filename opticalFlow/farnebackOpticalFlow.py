@@ -41,7 +41,7 @@ cap = cv.VideoCapture(vidpath)
 # read first frame
 _, old_frame = cap.read()
 old_frame_gray = cv.cvtColor(old_frame, cv.COLOR_BGR2GRAY)
-old_frame_enhanced = cv.Canny(old_frame_gray, 100, 200)
+old_frame_enhanced = cv.Canny(old_frame_gray, 100, 0)
 
 # create black result image
 hsv_img = np.zeros_like(old_frame)
@@ -64,7 +64,7 @@ while(True):
     # get frame and convert to grayscale
     _, new_frame = cap.read()
     new_frame_gray = cv.cvtColor(new_frame, cv.COLOR_BGR2GRAY)
-    new_frame_enhanced = cv.Canny(new_frame_gray, 100, 200)
+    new_frame_enhanced = cv.Canny(new_frame_gray, 100, 0)
 
     
     # do Farneback optical flow
