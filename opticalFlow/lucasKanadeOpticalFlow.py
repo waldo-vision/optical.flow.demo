@@ -10,13 +10,41 @@ The program currently outputs the result video to the same location as your inpu
 The idea is that perhaps the data about how certain pixels/features are moving across the screen could be used to figure out how the player camera / aim was changing.
 """
 
+from tkinter import *
+from tkinter import filedialog
 import cv2 as cv
 import numpy as np
+from tkinter.messagebox import showinfo
+
+# GUI FILE BROWSER------------------------------------------------------------
+
+window = Tk()
+window.geometry('300x150') # sets the size of the GUI window
+window.title('Select a Video File') # creates a title for the window
+
+# function allowing you to find/select video in GUI
+def get_file_path():
+    global file_path
+    # Open and return file path
+    file_path = filedialog.askopenfilename(title = "Select a Video File", filetypes = (("mp4", "*.mp4"), ("mov files", "*.mov") ,("wmv", "*.wmv"), ("avi", "*.avi")))
+    showinfo(title='Selected File', message=file_path)
+    
+# function allowing you to select the output path in the GUI
+def output():
+    global savepath
+    savepath = filedialog.asksaveasfilename(filetypes=[("mp4", '*.mp4')])
+    window.destroy()
+
+# Creating a button to search for the input file and to select the output destinatio and file name
+b1 = Button(window, text = 'Open a File', command = get_file_path).pack()
+b2 = Button(window, text = 'Save File Name', command = output).pack()
+window.mainloop()
+
 
 # PARAMETERS------------------------------------------------------------------
 
 # path to input videofile
-vidpath = r""
+vidpath = file_path
 
 # do you want to save the video?
 savevid = True
@@ -83,8 +111,8 @@ old_points = cv.goodFeaturesToTrack(old_gray, maxCorners=numPts, mask=crosshairm
 # if saving video
 if savevid:
     # path to save output video
-    pathparts = vidpath.split('.')
-    savepath = '.'+ vidpath.split('.')[-2] + '_LK_FLOW' + '.mp4'
+    #pathparts = vidpath.split('.')
+    #savepath = vidpath.split('.')[-2] + '_LK_FLOW' + '.mp4'
     print(f"Saving Output video to: {savepath}")
 
     # get shape of video frames
