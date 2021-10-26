@@ -31,8 +31,8 @@ def get_file_path():
     
 # function allowing you to select the output path in the GUI
 def output():
-    global savepath
-    savepath = filedialog.asksaveasfilename(filetypes=[("mp4", '*.mp4')])
+    global outpath
+    outpath = filedialog.asksaveasfilename(filetypes=[("mp4", '*.mp4')])
     window.destroy()
 
 # Creating a button to search for the input file and to select the output destinatio and file name
@@ -111,8 +111,8 @@ old_points = cv.goodFeaturesToTrack(old_gray, maxCorners=numPts, mask=crosshairm
 # if saving video
 if savevid:
     # path to save output video
-    #pathparts = vidpath.split('.')
-    #savepath = vidpath.split('.')[-2] + '_LK_FLOW' + '.mp4'
+    filename = outpath
+    savepath = filename + '_LK_FLOW' + '.mp4'
     print(f"Saving Output video to: {savepath}")
 
     # get shape of video frames
