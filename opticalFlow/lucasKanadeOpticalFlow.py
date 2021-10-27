@@ -35,9 +35,9 @@ fps = 30 # fps of output video, should match input video
 # visualization parameters
 numPts = 3 # max number of points to track
 trailLength = 600 # how many frames to keep a fading trail behind a tracked point to show motion
-trailThickness = 8 # thickness of the trail to draw behind the target
+trailThickness = 3 # thickness of the trail to draw behind the target
 trailFade = 0 # the intensity at which the trail fades
-pointSize = 10 # pixel radius of the circle to draw over tracked points
+pointSize = 5 # pixel radius of the circle to draw over tracked points
 
 # params for Shi-Tomasi corner detection
 shitomasi_params = {
