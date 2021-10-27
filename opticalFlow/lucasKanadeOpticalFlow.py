@@ -6,25 +6,20 @@ The Shi-Tomasi corner detection is used to pick points in the video that are eas
 The optical flow algorithm will track where those features move.
 The visualization will draw a point over the tracked features and a trail of where the feature has been.
 The program currently outputs the result video to the same location as your input video, with the name <input_vid_filename>_LK_FLOW.mp4
-
 The idea is that perhaps the data about how certain pixels/features are moving across the screen could be used to figure out how the player camera / aim was changing.
 """
 
 import cv2 as cv
 import numpy as np
-import os, sys
+import os
 
 # PARAMETERS------------------------------------------------------------------
-
-#Canny Threshholds
-th1 = 300
-th2 = 300
 
 # path to input videofile
 vidpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bf_clip.mp4")
 
 # do you want to save the video?
-savevid = False
+savevid = True
 
 # do you want to preview the output?
 previewWindow = True
@@ -34,9 +29,9 @@ fps = 30 # fps of output video, should match input video
 
 # visualization parameters
 numPts = 3 # max number of points to track
-trailLength = 600 # how many frames to keep a fading trail behind a tracked point to show motion
+trailLength = 60 # how many frames to keep a fading trail behind a tracked point to show motion
 trailThickness = 3 # thickness of the trail to draw behind the target
-trailFade = 0 # the intensity at which the trail fades
+trailFade = 4 # the intensity at which the trail fades
 pointSize = 5 # pixel radius of the circle to draw over tracked points
 
 # params for Shi-Tomasi corner detection
@@ -65,7 +60,6 @@ cap = cv.VideoCapture(vidpath)
 # get the first frame
 _, old_frame = cap.read()
 old_gray = cv.cvtColor(old_frame, cv.COLOR_BGR2GRAY)
-old_gray = cv.Canny(old_gray, th1, th2)
 
 # get resolution of video
 res_x = len(old_frame[0])
@@ -109,12 +103,8 @@ while(True):
     if not stillGoing:
         break
 
-    # convert to grayscale edge map using canny
-    new_frame_gray = cv.Canny(new_frame, th1, th2)
-    imgCanny = new_frame_gray
-
-     #convert single channel Canny image to three channel image
-    imgCanny = cv.merge((imgCanny,imgCanny,imgCanny))
+    # convert to grayscale
+    new_frame_gray = cv.cvtColor(new_frame, cv.COLOR_BGR2GRAY)
 
     # calculate optical flow
     new_points, st, err = cv.calcOpticalFlowPyrLK(old_gray, new_frame_gray, old_points, None, **LK_params)
@@ -152,25 +142,17 @@ while(True):
 
         # add circle over the point
         new_frame = cv.circle(new_frame, trail_history[i][0][0], pointSize, color[i].tolist(), -1)
-        imgCanny = cv.circle(imgCanny, trail_history[i][0][0], pointSize, color[i].tolist(), -1)
     
-   
     # add trail to frame
     img = cv.add(new_frame, trailMask)
-    imgCanny = cv.add(imgCanny, trailMask)
 
     # show the frames
     if previewWindow:
-        cv.imshow('trailMask', trailMask)
         cv.imshow('optical flow', img)
-        cv.imshow('canny', imgCanny)
 
     # write frames to new output video
     if savevid:
         videoOut.write(img)
-    
-    #Save a jpg to see how the canny img looks like
-    #cv.imwrite(vidpath.split('.')[0] + 'test' + str(th1) + "-" + str(th2) + '.jpg', new_frame_gray)
 
     # kill window if ESC is pressed
     k = cv.waitKey(30) & 0xff

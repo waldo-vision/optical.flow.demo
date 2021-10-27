@@ -5,18 +5,16 @@ Farneback Optical Flow calculates the optical flow (motion) of every pixel in a 
 Right now, in the result visualization, the intensity of a pixel's motion will change both it's color and magnitude.
 Brighter pixels have more motion.
 The output visualization is stored in the same location as the input video with the name <input_vid_filename>_FB_FLOW.mp4
-
 The idea is that perhaps the data about how certain pixels/features are moving across the screen could be used to figure out how the player camera / aim was changing.
 """
 
 import numpy as np
 import cv2 as cv
-import os, sys
 
 # PARAMETERS--------------------------------
 
 # path to input video file
-vidpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bf_clip.mp4")
+vidpath = r""
 
 # do you want to save the output video?
 savevid = True
@@ -41,7 +39,6 @@ cap = cv.VideoCapture(vidpath)
 # read first frame
 _, old_frame = cap.read()
 old_frame_gray = cv.cvtColor(old_frame, cv.COLOR_BGR2GRAY)
-old_frame_enhanced = cv.Canny(old_frame_gray, 100, 0)
 
 # create black result image
 hsv_img = np.zeros_like(old_frame)
@@ -64,11 +61,9 @@ while(True):
     # get frame and convert to grayscale
     _, new_frame = cap.read()
     new_frame_gray = cv.cvtColor(new_frame, cv.COLOR_BGR2GRAY)
-    new_frame_enhanced = cv.Canny(new_frame_gray, 100, 0)
 
-    
     # do Farneback optical flow
-    flow = cv.calcOpticalFlowFarneback(old_frame_enhanced, new_frame_enhanced, None, pyr_scale, levels, winsize, iterations, poly_n, poly_sigma, flags)
+    flow = cv.calcOpticalFlowFarneback(old_frame_gray, new_frame_gray, None, pyr_scale, levels, winsize, iterations, poly_n, poly_sigma, flags)
 
     # conversion
     mag, ang = cv.cartToPolar(flow[...,0], flow[...,1])
@@ -95,8 +90,7 @@ while(True):
         videoOut.write(bgr_img)
 
     # set old frame to new
-    old_frame_enhanced = new_frame_enhanced
-    #cv.imwrite(vidpath.split('.')[0] + 'test' + '.jpg', new_frame_enhanced)
+    old_frame_gray = new_frame_gray
 
 # cleanup
 videoOut.release()
