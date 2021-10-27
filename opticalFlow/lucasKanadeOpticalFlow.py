@@ -65,7 +65,7 @@ cap = cv.VideoCapture(vidpath)
 # get the first frame
 _, old_frame = cap.read()
 old_gray = cv.cvtColor(old_frame, cv.COLOR_BGR2GRAY)
-old_enhanced = cv.Canny(old_gray, th1, th2)
+old_gray = cv.Canny(old_gray, th1, th2)
 
 # get resolution of video
 res_x = len(old_frame[0])
@@ -84,7 +84,7 @@ trail_history = [[[(0,0), (0,0)] for i in range(trailLength)] for i in range(num
 
 # get features from first frame
 print(f"\nRunning Optical Flow on: {vidpath}")
-old_points = cv.goodFeaturesToTrack(old_enhanced, maxCorners=numPts, mask=crosshairmask, **shitomasi_params)
+old_points = cv.goodFeaturesToTrack(old_gray, maxCorners=numPts, mask=crosshairmask, **shitomasi_params)
 
 # if saving video
 if savevid:
@@ -109,12 +109,15 @@ while(True):
     if not stillGoing:
         break
 
-    # convert to grayscale
-    new_frame_gray = cv.cvtColor(new_frame, cv.COLOR_BGR2GRAY)
-    new_frame_enhanced = cv.Canny(new_frame_gray, th1, th2)
+    # convert to grayscale edge map using canny
+    new_frame_gray = cv.Canny(new_frame, th1, th2)
+    imgCanny = new_frame_gray
+
+     #convert single channel Canny image to three channel image
+    imgCanny = cv.merge((imgCanny,imgCanny,imgCanny))
 
     # calculate optical flow
-    new_points, st, err = cv.calcOpticalFlowPyrLK(old_enhanced, new_frame_enhanced, old_points, None, **LK_params)
+    new_points, st, err = cv.calcOpticalFlowPyrLK(old_gray, new_frame_gray, old_points, None, **LK_params)
 
     # select good points
     if old_points is not None:
@@ -149,22 +152,25 @@ while(True):
 
         # add circle over the point
         new_frame = cv.circle(new_frame, trail_history[i][0][0], pointSize, color[i].tolist(), -1)
+        imgCanny = cv.circle(imgCanny, trail_history[i][0][0], pointSize, color[i].tolist(), -1)
     
+   
     # add trail to frame
     img = cv.add(new_frame, trailMask)
-    imgCanny = cv.add(new_frame_enhanced, trailMask)  
+    imgCanny = cv.add(imgCanny, trailMask)
 
     # show the frames
     if previewWindow:
+        cv.imshow('trailMask', trailMask)
         cv.imshow('optical flow', img)
-        cv.imshow('Canny', imgCanny)
+        cv.imshow('canny', imgCanny)
 
     # write frames to new output video
     if savevid:
         videoOut.write(img)
     
     #Save a jpg to see how the canny img looks like
-    #cv.imwrite(vidpath.split('.')[0] + 'test' + str(th1) + "-" + str(th2) + '.jpg', new_frame_enhanced)
+    #cv.imwrite(vidpath.split('.')[0] + 'test' + str(th1) + "-" + str(th2) + '.jpg', new_frame_gray)
 
     # kill window if ESC is pressed
     k = cv.waitKey(30) & 0xff
@@ -172,12 +178,12 @@ while(True):
         break
 
     # update previous frame and previous points
-    old_enhanced = new_frame_enhanced.copy()
+    old_gray = new_frame_gray.copy()
     old_points = good_new.reshape(-1,1,2)
 
     # if old_points < numPts, get new points
     if (numPts - len(old_points)) > 0:
-        old_points = cv.goodFeaturesToTrack(old_enhanced, maxCorners=numPts, mask=crosshairmask, **shitomasi_params)
+        old_points = cv.goodFeaturesToTrack(old_gray, maxCorners=numPts, mask=crosshairmask, **shitomasi_params)
 
 # after video is finished
 print('\nComplete!\n')
