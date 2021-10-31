@@ -25,3 +25,24 @@ Phase 1 focuses primarily on humanized aim-assist. Upon completion of phase 1, W
 6. Game graphics / video analysis 
 7. Gamers
 8. Current closet hackers you can help ( ͡° ͜ʖ ͡°)
+
+
+# Use in Container:
+Segment is for using code inside a Docker container for better development process that includes all dependencies.
+For now you have to manually build it because there are no registry with image for pulling:
+
+1) Enter the Directory with repo and Dockerfile
+
+2) Build an image with command:
+*"docker build -t waldo.optical.flow.image ."*
+
+You can also add tag for versioning in the end of the name like this:
+*"docker build -t waldo.optical.flow.image:1.0.0 ."*
+The default tag is *latest*
+
+3) Create and run container with command:
+*"docker run -t -d --name waldo.optical.flow waldo.optical.flow.image"*
+
+The tag that was created in previous step can be used with the image name *waldo.optical.flow.image:1.0.0* and the default is *latest*
+
+In this scenario it will work on background and will not exit because for now there are no process to be working with.
