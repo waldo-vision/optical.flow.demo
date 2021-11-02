@@ -1,8 +1,8 @@
-FROM python:3.8
+FROM python:3.9
 
-WORKDIR /code
+WORKDIR /code/
 
-COPY /opticalFlow /code
+COPY . /code
 
 RUN apt-get update ##[edited]
 RUN apt-get install ffmpeg libsm6 libxext6  -y

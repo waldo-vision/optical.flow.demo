@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+numpy = {version="1.21.3"}
+opencv-python = {version="4.5.4.58"}
+
+fastapi = {version="0.66.0"}
+uvicorn = {version="0.14.0"}
+pydantic = {version="1.8.2"}
+python-multipart = {version="0.0.5"}
+aiofiles = {version="0.7.0"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

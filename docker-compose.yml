@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  api:
+    restart: always
+    # better usage of image with custom registry will be: ${DOCKER_REGISTRY}/image:${TAG}
+    image: waldo.optical.flow.image
+    build:
+      context: ./opticalFlow/
+    command: bash -c "python opticalFlow/main.py"
+    env_file: 
+      - var.env
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
