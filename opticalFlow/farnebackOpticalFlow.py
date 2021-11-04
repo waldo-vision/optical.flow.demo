@@ -8,8 +8,7 @@ The output visualization is stored in the same location as the input video with 
 The idea is that perhaps the data about how certain pixels/features are moving across the screen could be used to figure out how the player camera / aim was changing.
 """
 
-from tkinter import *
-from tkinter import filedialog
+from tkinter import (Tk, Button, filedialog)
 from tkinter.messagebox import showinfo
 import numpy as np
 import cv2 as cv

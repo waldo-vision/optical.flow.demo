@@ -10,11 +10,10 @@ The program currently outputs the result video to the same location as your inpu
 The idea is that perhaps the data about how certain pixels/features are moving across the screen could be used to figure out how the player camera / aim was changing.
 """
 
-from tkinter import *
-from tkinter import filedialog
+from tkinter import (Tk, Button, filedialog)
+from tkinter.messagebox import showinfo
 import cv2 as cv
 import numpy as np
-from tkinter.messagebox import showinfo
 
 # GUI FILE BROWSER------------------------------------------------------------
 
