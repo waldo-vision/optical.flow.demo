@@ -97,7 +97,6 @@ class Isolator:
 	def cut_clips(self, clips):
 		for file_name in clips:
 			clip = clips[file_name]
-			print(clip)
 			ffmpeg_extract_subclip(self.file_path, int(clip["start"] / self.video.fps), int(clip["end"]/ self.video.fps), targetname=file_name)
 
 
