@@ -6,7 +6,7 @@ Check out this [video](https://youtu.be/GOI9EkLsUm0) discussing the purpose and 
 * This project is still under development. 
 
 ## The What
-A new market for cheats that are visually indistinguishable to the human eye have lead to a rise in "closet hacking" among streamers and professionals.
+A new market for cheats that are visually indistinguishable to the human eye have led to a rise in "closet hacking" among streamers and professionals.
 This form of cheating is extremely hard to detect. In some cases it is impossible to detect, even with today's most advanced anti-cheat software. 
 
 We will combat this new kind of cheating by creating our own deep learning program to detect this behavior in video clips.
