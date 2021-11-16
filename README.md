@@ -46,3 +46,12 @@ The default tag is *latest*
 The tag that was created in previous step can be used with the image name *waldo.optical.flow.image:1.0.0* and the default is *latest*
 
 In this scenario it will work on background and will not exit because for now there are no process to be working with.
+
+# For container auto building and starting it with working api:
+*"docker-compose up -d --build"*
+
+This way you will have automatic docker image building, automatic start of it in background and you will have an api process started on your localhost.
+For accessing api use http://127.0.0.1:8000/docs or http://127.0.0.1:8000/recoc
+
+For all custom changing of Docker / docker-compose env variables use *.env* file
+For processing env variables to image -> running container - use *var.env* 
