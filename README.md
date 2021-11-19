@@ -20,7 +20,7 @@ Phase 1 focuses primarily on humanized aim-assist. Upon completion of phase 1, W
 1. Machine learning / neural networks / AI 
 2. Visualizations and graphics 
 3. Data analysis 
-4. General python 
+4. General Python 
 5. Website design / programming 
 6. Game graphics / video analysis 
 7. Gamers
