@@ -6,17 +6,17 @@ The Shi-Tomasi corner detection is used to pick points in the video that are eas
 The optical flow algorithm will track where those features move.
 The visualization will draw a point over the tracked features and a trail of where the feature has been.
 The program currently outputs the result video to the same location as your input video, with the name <input_vid_filename>_LK_FLOW.mp4
-
 The idea is that perhaps the data about how certain pixels/features are moving across the screen could be used to figure out how the player camera / aim was changing.
 """
 
 import cv2 as cv
 import numpy as np
+import os
 
 # PARAMETERS------------------------------------------------------------------
 
 # path to input videofile
-vidpath = r""
+vidpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bf_clip.mp4")
 
 # do you want to save the video?
 savevid = True
@@ -25,14 +25,14 @@ savevid = True
 previewWindow = True
 
 # output video params
-fps = 20 # fps of output video, should match input video
+fps = 30 # fps of output video, should match input video
 
 # visualization parameters
-numPts = 5 # max number of points to track
+numPts = 3 # max number of points to track
 trailLength = 60 # how many frames to keep a fading trail behind a tracked point to show motion
-trailThickness = 8 # thickness of the trail to draw behind the target
+trailThickness = 3 # thickness of the trail to draw behind the target
 trailFade = 4 # the intensity at which the trail fades
-pointSize = 15 # pixel radius of the circle to draw over tracked points
+pointSize = 5 # pixel radius of the circle to draw over tracked points
 
 # params for Shi-Tomasi corner detection
 shitomasi_params = {
@@ -84,7 +84,7 @@ old_points = cv.goodFeaturesToTrack(old_gray, maxCorners=numPts, mask=crosshairm
 if savevid:
     # path to save output video
     pathparts = vidpath.split('.')
-    savepath = '.'+ vidpath.split('.')[-2] + '_LK_FLOW' + '.mp4'
+    savepath = vidpath.split('.')[-2] + '_LK_FLOW' + '.mp4'
     print(f"Saving Output video to: {savepath}")
 
     # get shape of video frames

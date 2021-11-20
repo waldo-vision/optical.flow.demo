@@ -5,7 +5,6 @@ Farneback Optical Flow calculates the optical flow (motion) of every pixel in a 
 Right now, in the result visualization, the intensity of a pixel's motion will change both it's color and magnitude.
 Brighter pixels have more motion.
 The output visualization is stored in the same location as the input video with the name <input_vid_filename>_FB_FLOW.mp4
-
 The idea is that perhaps the data about how certain pixels/features are moving across the screen could be used to figure out how the player camera / aim was changing.
 """
 
